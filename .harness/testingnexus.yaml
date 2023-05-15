@@ -1,0 +1,57 @@
+pipeline:
+  name: testing-nexus
+  identifier: testingnexus
+  projectIdentifier: NgLabs
+  orgIdentifier: default
+  tags: {}
+  properties:
+    ci:
+      codebase:
+        connectorRef: gitconnectordhruba
+        repoName: nexus-repo-github-action-test
+        build: <+input>
+  stages:
+    - stage:
+        name: testing
+        identifier: testing
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: true
+          platform:
+            os: Linux
+            arch: Amd64
+          runtime:
+            type: Cloud
+            spec: {}
+          execution:
+            steps:
+              - step:
+                  type: Run
+                  name: Run_1
+                  identifier: Run_1
+                  spec:
+                    shell: Sh
+                    command: go build -v .
+              - step:
+                  type: Run
+                  name: Run_2
+                  identifier: Run_2
+                  spec:
+                    shell: Sh
+                    command: go test -v .
+              - step:
+                  type: Action
+                  name: Action_1
+                  identifier: Action_1
+                  spec:
+                    uses: sonatype-nexus-community/nexus-repo-github-action@master
+                    with:
+                      serverUrl: https://2ccd-2405-201-a808-70b8-64aa-4d06-690d-aac4.ngrok-free.app/
+                      username: deploy-user
+                      password: testing-nexus
+                      format: raw
+                      repository: raw-github-action-test
+                      coordinates: directory=nexus-repo-github-action-test-rawrepodir
+                      assets: filename=gh-action-test
+                      filename: ./gh-action-test
