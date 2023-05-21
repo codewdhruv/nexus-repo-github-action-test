@@ -56,19 +56,24 @@ pipeline:
                       assets: filename=gh-action-test
                       filename: ./gh-action-test
               - step:
+                  type: Run
+                  name: Run_3
+                  identifier: Run_3
+                  spec:
+                    shell: Sh
+                    command: "mvn clean package      "
+              - step:
                   type: Plugin
                   name: Plugin_1
                   identifier: Plugin_1
                   spec:
                     connectorRef: harnessnew
-                    image: harnesscommunity/publish-nexus-repository:1.0.0
+                    image: harnesscommunity/publish-nexus-repository:1.1.1
                     settings:
                       username: deploy-user
                       password: testing-nexus
-                      nexus_url: https://2ccd-2405-201-a808-70b8-64aa-4d06-690d-aac4.ngrok-free.app/
-                      repository_id: raw-github-action-test
-                      group_id: testing
-                      version: "1.0"
-                      artifact_type: raw
-                      file: ./gh-action-test
-                      artifact_id: "1.0"
+                      server_url: https://2ccd-2405-201-a808-70b8-64aa-4d06-690d-aac4.ngrok-free.app/
+                      repository: raw-github-action-test
+                      attributes: "-CgroupId=org.v6testing -CartifactId=example -Cversion=1.0 -Aextension=jar -Aclassifier=bin"
+                      format: maven2
+                      filename: /target/example-1.0.jar
